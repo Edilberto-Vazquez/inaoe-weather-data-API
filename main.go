@@ -6,5 +6,6 @@ import (
 
 func main() {
 	// routes.Run()
-	etl.ProcesNewFile("/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-01102019.efm")
+	// etl.ProcesNewFile("/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-01102019.efm")
+	etl.ProcesNewFile("/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/EFMEvents.log")
 }
