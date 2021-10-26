@@ -1,7 +1,6 @@
 package etl
 
 import (
-	"bufio"
 	"log"
 	"os"
 )
@@ -14,9 +13,7 @@ func ProcesNewFile(path string) *EfmFile {
 		log.Println(err)
 	}
 	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	newEFM.ProcessFile(scanner, path)
+	newEFM.ProcessFile(file, path)
 
 	return newEFM
 }

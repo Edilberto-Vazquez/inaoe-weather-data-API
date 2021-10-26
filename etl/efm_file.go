@@ -2,6 +2,7 @@ package etl
 
 import (
 	"bufio"
+	"os"
 	"strings"
 )
 
@@ -15,9 +16,10 @@ func NewEfmFile() *EfmFile {
 	}
 }
 
-func (efm *EfmFile) ProcessFile(scanner *bufio.Scanner, path string) {
+func (efm *EfmFile) ProcessFile(file *os.File, path string) {
 	electricFields := make([]string, 0)
 	time := ""
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		fields := strings.Split(scanner.Text(), ",")
 		if time == "" || time == fields[0] {
