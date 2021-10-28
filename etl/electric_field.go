@@ -2,21 +2,21 @@ package etl
 
 import (
 	"bufio"
-	"os"
 	"strings"
 )
 
 type ElectricField struct {
-	lines []*ElectricFieldRow
+	rocords []interface{}
 }
 
-func NewEfmFile() *ElectricField {
+func NewElectricFields() *ElectricField {
 	return &ElectricField{
-		lines: make([]*ElectricFieldRow, 0),
+		rocords: make([]interface{}, 0),
 	}
 }
 
-func (ef *ElectricField) ProcessFile(path string, file *os.File) {
+func (ef *ElectricField) ProcessFile(path string) {
+	file := OpenFile(path)
 	defer file.Close()
 	electricFields := make([]string, 0)
 	time := ""
@@ -27,10 +27,14 @@ func (ef *ElectricField) ProcessFile(path string, file *os.File) {
 			electricFields = append(electricFields, fields[1])
 			time = fields[0]
 		} else {
-			ef.lines = append(ef.lines, NewElectricFieldRow(path, fields[0], electricFields, fields[2]))
+			ef.rocords = append(ef.rocords, NewElectricFieldRow(path, fields[0], electricFields, fields[2]))
 			electricFields = make([]string, 0)
 			electricFields = append(electricFields, fields[1])
 			time = fields[0]
 		}
 	}
+}
+
+func (ef *ElectricField) GetRecords() []interface{} {
+	return ef.rocords
 }

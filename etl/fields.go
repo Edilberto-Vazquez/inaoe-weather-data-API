@@ -2,9 +2,20 @@ package etl
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"strconv"
 	"strings"
 )
+
+// -----open a file-----
+func OpenFile(path string) *os.File {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Println(err)
+	}
+	return file
+}
 
 // -----chech if the log contains a lightning
 func ThereIsLightning(str string) bool {

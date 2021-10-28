@@ -1,29 +1,21 @@
 package etl
 
-import (
-	"fmt"
-	"log"
-	"os"
+import "log"
+
+var (
+	filesType = map[string]FilesTypes{
+		"log": NewLogEvents(),
+		"efm": NewElectricFields(),
+		"wc":  NewWeatherCloud(),
+	}
 )
 
-func OpenFile(path string) *os.File {
-	file, err := os.Open(path)
-	if err != nil {
-		log.Println(err)
+func ProcesNewFile(path string, fileType string) FilesTypes {
+	ft, ok := filesType[fileType]
+	if !ok {
+		log.Printf("Can not open the file %s\n", path)
+		return nil
 	}
-	return file
-}
-
-func ProcesNewFile(path string) {
-	// path := "/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-01102019.efm"
-	// newEFM := NewEfmFile()
-	newEfmEvents := NewEfmEvents()
-	// wcf := NewWeatherCloud()
-	file := OpenFile(path)
-	// newEFM.ProcessFile(file, path)
-	newEfmEvents.ProcessFile(file)
-	// wcf.ProcessFile(file, path)
-	for _, v := range newEfmEvents.lines {
-		fmt.Println(v)
-	}
+	ft.ProcessFile(path)
+	return ft
 }

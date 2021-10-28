@@ -1,7 +1,6 @@
 package etl
 
-import "os"
-
-type File interface {
-	ProcessFile(*os.File, string)
+type FilesTypes interface {
+	ProcessFile(string)
+	GetRecords() []interface{}
 }

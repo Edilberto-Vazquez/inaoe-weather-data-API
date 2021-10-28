@@ -2,20 +2,20 @@ package etl
 
 import (
 	"bufio"
-	"os"
 )
 
 type WeatherCloud struct {
-	records []*WeatherCloudRow
+	records []interface{}
 }
 
 func NewWeatherCloud() *WeatherCloud {
 	return &WeatherCloud{
-		records: make([]*WeatherCloudRow, 0),
+		records: make([]interface{}, 0),
 	}
 }
 
-func (wc *WeatherCloud) ProcessFile(file *os.File, path string) {
+func (wc *WeatherCloud) ProcessFile(path string) {
+	file := OpenFile(path)
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -25,4 +25,8 @@ func (wc *WeatherCloud) ProcessFile(file *os.File, path string) {
 		wc.records = append(wc.records, NewWeatherCloudRow(path, scanner.Text()))
 	}
 	wc.records = wc.records[1:]
+}
+
+func (wc *WeatherCloud) GetRecords() []interface{} {
+	return wc.records
 }

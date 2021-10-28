@@ -1,44 +1,44 @@
 package etl
 
 type WeatherCloudRow struct {
-	place    string
-	dateTime string
-	tempIn   string
-	temp     string
-	chill    string
-	dewIn    string
-	dew      string
-	heatIn   string
-	heat     string
-	humin    string
-	hum      string
-	wspdhi   string
-	wspdavg  string
-	wdiravg  string
-	bar      string
-	rain     string
-	rainRate string
+	Place    string
+	DateTime string
+	TempIn   string
+	Temp     string
+	Chill    string
+	DewIn    string
+	Dew      string
+	HeatIn   string
+	Heat     string
+	Humin    string
+	Hum      string
+	Wspdhi   string
+	Wspdavg  string
+	Wdiravg  string
+	Bar      string
+	Rain     string
+	RainRate string
 }
 
 func NewWeatherCloudRow(path string, record string) *WeatherCloudRow {
 	fields := splitString(record)
 	return &WeatherCloudRow{
-		place:    newPlace(path),
-		dateTime: fields[0],
-		tempIn:   commaToPoint(fields[1]),
-		temp:     commaToPoint(fields[2]),
-		chill:    commaToPoint(fields[3]),
-		dewIn:    commaToPoint(fields[4]),
-		dew:      commaToPoint(fields[5]),
-		heatIn:   commaToPoint(fields[6]),
-		heat:     commaToPoint(fields[7]),
-		humin:    commaToPoint(fields[8]),
-		hum:      commaToPoint(fields[9]),
-		wspdhi:   commaToPoint(fields[10]),
-		wspdavg:  commaToPoint(fields[11]),
-		wdiravg:  commaToPoint(fields[12]),
-		bar:      commaToPoint(fields[13]),
-		rain:     commaToPoint(fields[14]),
-		rainRate: commaToPoint(fields[15]),
+		Place:    newPlace(path),
+		DateTime: fields[0],
+		TempIn:   commaToPoint(fields[1]),
+		Temp:     commaToPoint(fields[2]),
+		Chill:    commaToPoint(fields[3]),
+		DewIn:    commaToPoint(fields[4]),
+		Dew:      commaToPoint(fields[5]),
+		HeatIn:   commaToPoint(fields[6]),
+		Heat:     commaToPoint(fields[7]),
+		Humin:    commaToPoint(fields[8]),
+		Hum:      commaToPoint(fields[9]),
+		Wspdhi:   commaToPoint(fields[10]),
+		Wspdavg:  commaToPoint(fields[11]),
+		Wdiravg:  commaToPoint(fields[12]),
+		Bar:      commaToPoint(fields[13]),
+		Rain:     commaToPoint(fields[14]),
+		RainRate: commaToPoint(fields[15]),
 	}
 }

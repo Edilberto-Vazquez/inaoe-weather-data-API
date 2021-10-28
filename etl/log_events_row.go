@@ -1,17 +1,17 @@
 package etl
 
 type LogEventsRow struct {
-	dateTime  string
-	place     string
-	lightning bool
-	distance  int
+	DateTime  string
+	Place     string
+	Lightning bool
+	Distance  int
 }
 
 func NewLogEventsRow(str string) *LogEventsRow {
 	return &LogEventsRow{
-		dateTime:  newDateTime(str),
-		place:     newPlace(str),
-		lightning: newLightning(),
-		distance:  newDistance(str),
+		DateTime:  newDateTime(str),
+		Place:     newPlace(str),
+		Lightning: newLightning(),
+		Distance:  newDistance(str),
 	}
 }
