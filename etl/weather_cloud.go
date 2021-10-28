@@ -15,14 +15,14 @@ func NewWeatherCloud() *WeatherCloud {
 	}
 }
 
-func (wcf *WeatherCloud) ProcessFile(file *os.File, path string) {
+func (wc *WeatherCloud) ProcessFile(file *os.File, path string) {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if len(scanner.Text()) == 1 {
 			continue
 		}
-		wcf.records = append(wcf.records, NewWeatherCloudRow(path, scanner.Text()))
+		wc.records = append(wc.records, NewWeatherCloudRow(path, scanner.Text()))
 	}
-	wcf.records = wcf.records[1:]
+	wc.records = wc.records[1:]
 }

@@ -21,7 +21,7 @@ func ProcesNewFile(path string) {
 	// wcf := NewWeatherCloud()
 	file := OpenFile(path)
 	// newEFM.ProcessFile(file, path)
-	newEfmEvents.ProcessEfmEvents(file)
+	newEfmEvents.ProcessFile(file)
 	// wcf.ProcessFile(file, path)
 	for _, v := range newEfmEvents.lines {
 		fmt.Println(v)

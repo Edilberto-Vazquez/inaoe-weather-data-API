@@ -15,12 +15,12 @@ func NewEfmEvents() *LogEvents {
 	}
 }
 
-func (events *LogEvents) ProcessEfmEvents(file *os.File) {
+func (le *LogEvents) ProcessFile(file *os.File) {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if ThereIsLightning(scanner.Text()) {
-			events.lines = append(events.lines, NewLogEventsRow(scanner.Text()))
+			le.lines = append(le.lines, NewLogEventsRow(scanner.Text()))
 		}
 	}
 }
