@@ -7,10 +7,10 @@ type ElectricFieldRow struct {
 	rotorStatus   bool
 }
 
-func NewElectricFieldRow(fileName string, time string, electricFields []string, rotorStatus string) *ElectricFieldRow {
+func NewElectricFieldRow(path string, time string, electricFields []string, rotorStatus string) *ElectricFieldRow {
 	return &ElectricFieldRow{
-		place:         newPlace(fileName),
-		dateTime:      newDateTime(fileName) + " " + time,
+		place:         newPlace(path),
+		dateTime:      newDateTime(path) + " " + time,
 		electricField: electricFieldAvg(electricFields),
 		rotorStatus:   newRotorStatus(rotorStatus),
 	}

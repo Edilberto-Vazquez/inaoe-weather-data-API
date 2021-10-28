@@ -74,6 +74,7 @@ func splitString(record string) []string {
 	return strings.Split(record, ";")
 }
 
+// change comma to point
 func commaToPoint(str string) string {
 	if str == "" {
 		return "null"

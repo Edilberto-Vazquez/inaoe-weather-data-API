@@ -20,7 +20,7 @@ type WeatherCloudRow struct {
 	rainRate string
 }
 
-func NewWeatherCloudRow(record string, path string) *WeatherCloudRow {
+func NewWeatherCloudRow(path string, record string) *WeatherCloudRow {
 	fields := splitString(record)
 	return &WeatherCloudRow{
 		place:    newPlace(path),

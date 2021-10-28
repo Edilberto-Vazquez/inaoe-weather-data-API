@@ -22,7 +22,7 @@ func (wcf *WeatherCloud) ProcessFile(file *os.File, path string) {
 		if len(scanner.Text()) == 1 {
 			continue
 		}
-		wcf.records = append(wcf.records, NewWeatherCloudRow(scanner.Text(), path))
+		wcf.records = append(wcf.records, NewWeatherCloudRow(path, scanner.Text()))
 	}
 	wcf.records = wcf.records[1:]
 }
