@@ -17,14 +17,13 @@ func OpenFile(path string) *os.File {
 func ProcesNewFile(path string) {
 	// path := "/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-01102019.efm"
 	// newEFM := NewEfmFile()
-	// newEfmEvents := NewEfmEvents()
-	wcf := NewWeatherCloudFile()
+	newEfmEvents := NewEfmEvents()
+	// wcf := NewWeatherCloud()
 	file := OpenFile(path)
-	defer file.Close()
 	// newEFM.ProcessFile(file, path)
-	// newEfmEvents.ProcessEfmEvents(file)
-	wcf.ProcessWeatherCloudFile(file, path)
-	for _, v := range wcf.records {
+	newEfmEvents.ProcessEfmEvents(file)
+	// wcf.ProcessFile(file, path)
+	for _, v := range newEfmEvents.lines {
 		fmt.Println(v)
 	}
 }

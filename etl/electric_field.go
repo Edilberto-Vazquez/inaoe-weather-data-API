@@ -6,17 +6,18 @@ import (
 	"strings"
 )
 
-type EfmFile struct {
-	lines []*EfmRows
+type ElectricField struct {
+	lines []*ElectricFieldRow
 }
 
-func NewEfmFile() *EfmFile {
-	return &EfmFile{
-		lines: make([]*EfmRows, 0),
+func NewEfmFile() *ElectricField {
+	return &ElectricField{
+		lines: make([]*ElectricFieldRow, 0),
 	}
 }
 
-func (efm *EfmFile) ProcessFile(file *os.File, path string) {
+func (efm *ElectricField) ProcessFile(file *os.File, path string) {
+	defer file.Close()
 	electricFields := make([]string, 0)
 	time := ""
 	scanner := bufio.NewScanner(file)
@@ -26,7 +27,7 @@ func (efm *EfmFile) ProcessFile(file *os.File, path string) {
 			electricFields = append(electricFields, fields[1])
 			time = fields[0]
 		} else {
-			efm.lines = append(efm.lines, NewEfmRows(path, fields[0], electricFields, fields[2]))
+			efm.lines = append(efm.lines, NewElectricFieldRow(path, fields[0], electricFields, fields[2]))
 			electricFields = make([]string, 0)
 			electricFields = append(electricFields, fields[1])
 			time = fields[0]
