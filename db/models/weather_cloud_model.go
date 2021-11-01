@@ -9,21 +9,21 @@ import (
 type Weathercloud struct {
 	gorm.Model
 	DateTime time.Time `gorm:"<-:create;not null"`
-	TempIn   float32   `gorm:"<-:create;not null"`
-	Temp     float32   `gorm:"<-:create;not null"`
-	Chill    float32   `gorm:"<-:create;not null"`
-	DewIn    float32   `gorm:"<-:create;not null"`
-	Dew      float32   `gorm:"<-:create;not null"`
-	HeatIn   float32   `gorm:"<-:create;not null"`
-	Heat     float32   `gorm:"<-:create;not null"`
-	Humin    float32   `gorm:"<-:create;not null"`
-	Hum      float32   `gorm:"<-:create;not null"`
-	Wspdhi   float32   `gorm:"<-:create;not null"`
-	Wspdavg  float32   `gorm:"<-:create;not null"`
-	Wdiravg  float32   `gorm:"<-:create;not null"`
-	Bar      float32   `gorm:"<-:create;not null"`
-	Rain     float32   `gorm:"<-:create;not null"`
-	RainRate float32   `gorm:"<-:create;not null"`
+	TempIn   float64   `gorm:"<-:create"`
+	Temp     float64   `gorm:"<-:create"`
+	Chill    float64   `gorm:"<-:create"`
+	DewIn    float64   `gorm:"<-:create"`
+	Dew      float64   `gorm:"<-:create"`
+	HeatIn   float64   `gorm:"<-:create"`
+	Heat     float64   `gorm:"<-:create"`
+	Humin    float64   `gorm:"<-:create"`
+	Hum      float64   `gorm:"<-:create"`
+	Wspdhi   float64   `gorm:"<-:create"`
+	Wspdavg  float64   `gorm:"<-:create"`
+	Wdiravg  float64   `gorm:"<-:create"`
+	Bar      float64   `gorm:"<-:create"`
+	Rain     float64   `gorm:"<-:create"`
+	RainRate float64   `gorm:"<-:create"`
 	PlaceID  int
 	Place    Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

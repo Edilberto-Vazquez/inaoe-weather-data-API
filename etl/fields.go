@@ -1,11 +1,12 @@
 package etl
 
 import (
-	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // -----open a file-----
@@ -27,26 +28,36 @@ func ThereIsLightning(str string) bool {
 }
 
 // -----date-----
-func newDateTime(str string) string {
-	if regexList["date"].MatchString(str) {
-		re := regexList["date"]
-		date := re.FindString(str)
-		re = regexList["time"]
-		time := re.FindString(str)
-		split := strings.Split(date, "/")
-		date = split[2] + "-" + split[0] + "-" + split[1]
-		return date + " " + time
+func newDateTime(rowType string, str string) (dateTime time.Time) {
+	var date string
+	var duration string
+	var split []string
+	switch rowType {
+	case "log":
+		date = regexList["date"].FindString(str)
+		duration = regexList["duration"].FindString(str)
+		split = strings.Split(date, "/")
+		dateTime, _ = time.Parse(time.RFC3339, split[2]+"-"+split[0]+"-"+split[1]+"T"+duration+"Z")
+		return
+	case "efm":
+		split = strings.Split(str, "/")
+		split = strings.Split(split[len(split)-1], "-")
+		date = split[1]
+		duration = regexList["duration"].FindString(str)
+		dateTime, _ = time.Parse(time.RFC3339, date[4:8]+"-"+date[0:2]+"-"+date[2:4]+"T"+duration+"Z")
+		return
+	case "wc":
+		split = strings.Split(str, " ")
+		dateTime, _ = time.Parse(time.RFC3339, split[0]+"T"+split[1]+"Z")
+		return
 	}
-	split := strings.Split(str, "/")
-	split = strings.Split(split[len(split)-1], "-")
-	date := split[1]
-	return date[4:8] + "-" + date[0:2] + "-" + date[2:4]
+	return
 }
 
 // -----place-----
-func newPlace(str string) string {
+func newPlace(str string) int {
 	re := regexList["place"]
-	return re.FindString(str)
+	return places[re.FindString(str)]
 }
 
 func newLightning() bool {
@@ -54,24 +65,24 @@ func newLightning() bool {
 }
 
 // -----distance-----
-func newDistance(str string) (distance int) {
+func newDistance(str string) (distance int64) {
 	re := regexList["distance"]
 	match := re.FindString(str)
 	split := strings.Split(match, " ")
-	distance, _ = strconv.Atoi(split[1])
+	distance, _ = strconv.ParseInt(split[1], 10, 64)
 	return
 }
 
 // calc the average of the electric field
-func electricFieldAvg(electricFields []string) string {
+func electricFieldAvg(electricFields []string) float64 {
 	sum := 0.0
 	divisor := float64(len(electricFields))
 	for _, value := range electricFields {
 		float, _ := strconv.ParseFloat(value, 32)
 		sum += float
 	}
-	// return (math.Round((sum / divisor * 100)) / 100) // the function return a float64 if the rounding is with the function Round
-	return fmt.Sprintf("%0.2f", (sum / divisor)) // the function return a string if the roundig is with the function Sprintf
+	return (math.Round((sum / divisor * 100)) / 100) // the function return a float64 if the rounding is with the function Round
+	// return fmt.Sprintf("%0.2f", (sum / divisor)) // the function return a string if the roundig is with the function Sprintf
 
 }
 
@@ -86,9 +97,10 @@ func splitString(record string) []string {
 }
 
 // change comma to point
-func commaToPoint(str string) string {
+func commaToPoint(str string) float64 {
 	if str == "" {
-		return "null"
+		return 0
 	}
-	return strings.Replace(str, ",", ".", 1)
+	float, _ := strconv.ParseFloat(strings.Replace(str, ",", ".", 1), 32)
+	return float
 }

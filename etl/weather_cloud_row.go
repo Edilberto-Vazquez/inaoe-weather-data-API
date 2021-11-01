@@ -1,30 +1,34 @@
 package etl
 
+import (
+	"time"
+)
+
 type WeatherCloudRow struct {
-	Place    string
-	DateTime string
-	TempIn   string
-	Temp     string
-	Chill    string
-	DewIn    string
-	Dew      string
-	HeatIn   string
-	Heat     string
-	Humin    string
-	Hum      string
-	Wspdhi   string
-	Wspdavg  string
-	Wdiravg  string
-	Bar      string
-	Rain     string
-	RainRate string
+	Place    int
+	DateTime time.Time
+	TempIn   float64
+	Temp     float64
+	Chill    float64
+	DewIn    float64
+	Dew      float64
+	HeatIn   float64
+	Heat     float64
+	Humin    float64
+	Hum      float64
+	Wspdhi   float64
+	Wspdavg  float64
+	Wdiravg  float64
+	Bar      float64
+	Rain     float64
+	RainRate float64
 }
 
 func NewWeatherCloudRow(path string, record string) *WeatherCloudRow {
 	fields := splitString(record)
 	return &WeatherCloudRow{
 		Place:    newPlace(path),
-		DateTime: fields[0],
+		DateTime: newDateTime("wc", fields[0]),
 		TempIn:   commaToPoint(fields[1]),
 		Temp:     commaToPoint(fields[2]),
 		Chill:    commaToPoint(fields[3]),
