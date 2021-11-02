@@ -17,9 +17,9 @@ type Place struct {
 
 type Log struct {
 	gorm.Model
-	DateTime  string `gorm:"<-:create;not null"`
-	Lightning bool   `gorm:"<-:create;not null"`
-	Distance  uint8  `gorm:"<-:create;not null"`
+	DateTime  time.Time `gorm:"<-:create;not null"`
+	Lightning bool      `gorm:"<-:create;not null"`
+	Distance  int64     `gorm:"<-:create;not null"`
 	PlaceID   int
 	// Place     Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
@@ -27,7 +27,7 @@ type Log struct {
 type ElectricField struct {
 	gorm.Model
 	DateTime      time.Time `gorm:"<-:create;not null"`
-	ElectricField float32   `gorm:"<-:create;not null"`
+	ElectricField float64   `gorm:"<-:create;not null"`
 	RotorStatus   bool      `gorm:"<-:create;not null"`
 	PlaceID       int
 	// Place         Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
@@ -36,21 +36,21 @@ type ElectricField struct {
 type Weathercloud struct {
 	gorm.Model
 	DateTime time.Time `gorm:"<-:create;not null"`
-	TempIn   float32   `gorm:"<-:create;not null"`
-	Temp     float32   `gorm:"<-:create;not null"`
-	Chill    float32   `gorm:"<-:create;not null"`
-	DewIn    float32   `gorm:"<-:create;not null"`
-	Dew      float32   `gorm:"<-:create;not null"`
-	HeatIn   float32   `gorm:"<-:create;not null"`
-	Heat     float32   `gorm:"<-:create;not null"`
-	Humin    float32   `gorm:"<-:create;not null"`
-	Hum      float32   `gorm:"<-:create;not null"`
-	Wspdhi   float32   `gorm:"<-:create;not null"`
-	Wspdavg  float32   `gorm:"<-:create;not null"`
-	Wdiravg  float32   `gorm:"<-:create;not null"`
-	Bar      float32   `gorm:"<-:create;not null"`
-	Rain     float32   `gorm:"<-:create;not null"`
-	RainRate float32   `gorm:"<-:create;not null"`
+	TempIn   float64   `gorm:"<-:create;not null"`
+	Temp     float64   `gorm:"<-:create;not null"`
+	Chill    float64   `gorm:"<-:create;not null"`
+	DewIn    float64   `gorm:"<-:create;not null"`
+	Dew      float64   `gorm:"<-:create;not null"`
+	HeatIn   float64   `gorm:"<-:create;not null"`
+	Heat     float64   `gorm:"<-:create;not null"`
+	Humin    float64   `gorm:"<-:create;not null"`
+	Hum      float64   `gorm:"<-:create;not null"`
+	Wspdhi   float64   `gorm:"<-:create;not null"`
+	Wspdavg  float64   `gorm:"<-:create;not null"`
+	Wdiravg  float64   `gorm:"<-:create;not null"`
+	Bar      float64   `gorm:"<-:create;not null"`
+	Rain     float64   `gorm:"<-:create;not null"`
+	RainRate float64   `gorm:"<-:create;not null"`
 	PlaceID  int
 	// Place    Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
