@@ -11,7 +11,7 @@ var (
 		"distance":  regexp.MustCompile(`at\s\d\d\skm|at\s\d\skm`),
 	}
 	places = map[string]int{
-		"INAOE":  0,
-		"UPTLAX": 0,
+		"INAOE":  1,
+		"UPTLAX": 1,
 	}
 )
