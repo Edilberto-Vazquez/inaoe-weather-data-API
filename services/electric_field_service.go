@@ -43,8 +43,8 @@ func (ElectricFieldService) processFile(path string) (records []models.ElectricF
 	return
 }
 
-func (efs ElectricFieldService) CreateMultipleRecords(path string) (error, int64) {
+func (efs ElectricFieldService) CreateMultipleRecords(path string) (int64, error) {
 	records := efs.processFile(path)
 	result := libs.DBCon.Create(&records)
-	return result.Error, result.RowsAffected
+	return result.RowsAffected, result.Error
 }
