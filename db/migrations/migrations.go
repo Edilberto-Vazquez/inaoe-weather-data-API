@@ -21,7 +21,7 @@ type Log struct {
 	Lightning bool      `gorm:"<-:create;not null"`
 	Distance  int64     `gorm:"<-:create;not null"`
 	PlaceID   int
-	// Place     Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Place     Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 type ElectricField struct {
@@ -30,7 +30,7 @@ type ElectricField struct {
 	ElectricField float64   `gorm:"<-:create;not null"`
 	RotorStatus   bool      `gorm:"<-:create;not null"`
 	PlaceID       int
-	// Place         Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Place         Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 type Weathercloud struct {
@@ -52,7 +52,7 @@ type Weathercloud struct {
 	Rain     float64   `gorm:"<-:create;not null"`
 	RainRate float64   `gorm:"<-:create;not null"`
 	PlaceID  int
-	// Place    Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Place    Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func Migrate() {
@@ -68,18 +68,18 @@ func Migrate() {
 			fmt.Println(err)
 			return err
 		}
-		if err := tx.Exec("ALTER TABLE logs ADD CONSTRAINT fk_logs_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-			fmt.Println(err)
-			return err
-		}
-		if err := tx.Exec("ALTER TABLE electric_fields ADD CONSTRAINT fk_electric_fields_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-			fmt.Println(err)
-			return err
-		}
-		if err := tx.Exec("ALTER TABLE weatherclouds ADD CONSTRAINT fk_weatherclouds_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-			fmt.Println(err)
-			return err
-		}
+		// if err := tx.Exec("ALTER TABLE logs ADD CONSTRAINT fk_logs_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
+		// 	fmt.Println(err)
+		// 	return err
+		// }
+		// if err := tx.Exec("ALTER TABLE electric_fields ADD CONSTRAINT fk_electric_fields_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
+		// 	fmt.Println(err)
+		// 	return err
+		// }
+		// if err := tx.Exec("ALTER TABLE weatherclouds ADD CONSTRAINT fk_weatherclouds_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
+		// 	fmt.Println(err)
+		// 	return err
+		// }
 		return nil
 	})
 
