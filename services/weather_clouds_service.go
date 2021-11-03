@@ -61,6 +61,6 @@ func (WeathercloudService) processFile(path string) (records []models.Weatherclo
 
 func (wcs WeathercloudService) CreateMultipleRecords(path string) (int64, error) {
 	records := wcs.processFile(path)
-	result := libs.DBCon.Create(&records)
+	result := libs.DBCon.CreateInBatches(records, 1000)
 	return result.RowsAffected, result.Error
 }

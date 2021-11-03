@@ -45,6 +45,6 @@ func (ElectricFieldService) processFile(path string) (records []models.ElectricF
 
 func (efs ElectricFieldService) CreateMultipleRecords(path string) (int64, error) {
 	records := efs.processFile(path)
-	result := libs.DBCon.Create(&records)
+	result := libs.DBCon.CreateInBatches(records, 1000)
 	return result.RowsAffected, result.Error
 }

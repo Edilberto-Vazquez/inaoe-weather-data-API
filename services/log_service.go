@@ -37,6 +37,6 @@ func (LogService) processFile(path string) (records []models.Log) {
 
 func (log LogService) CreateMultipleRecords(path string) (int64, error) {
 	records := log.processFile(path)
-	result := libs.DBCon.Create(&records)
+	result := libs.DBCon.CreateInBatches(records, 1000)
 	return result.RowsAffected, result.Error
 }
