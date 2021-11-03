@@ -13,7 +13,7 @@ func NewLogEvents(str string) *LogEvents {
 	return &LogEvents{
 		DateTime:  NewDateTime("log", str),
 		PlaceID:   NewPlace(str),
-		Lightning: newLightning(),
+		Lightning: NewLightning(),
 		Distance:  NewDistance(str),
 	}
 }

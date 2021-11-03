@@ -63,7 +63,7 @@ func NewPlace(str string) int {
 	return places[re.FindString(str)]
 }
 
-func newLightning() bool {
+func NewLightning() bool {
 	return true
 }
 
@@ -101,7 +101,7 @@ func SplitString(record string) []string {
 
 // change comma to point
 func CommaToPoint(str string) float64 {
-	if str == "" {
+	if len(str) == 1 {
 		return 0
 	}
 	float, _ := strconv.ParseFloat(strings.Replace(str, ",", ".", 1), 32)
