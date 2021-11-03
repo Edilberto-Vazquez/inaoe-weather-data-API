@@ -1,30 +1,19 @@
 package etl
 
-import (
-	"bufio"
-)
+import "time"
 
 type LogEvents struct {
-	records []interface{}
+	DateTime  time.Time
+	Lightning bool
+	Distance  int64
+	PlaceID   int
 }
 
-func NewLogEvents() *LogEvents {
+func NewLogEvents(str string) *LogEvents {
 	return &LogEvents{
-		records: make([]interface{}, 0),
+		DateTime:  NewDateTime("log", str),
+		PlaceID:   NewPlace(str),
+		Lightning: newLightning(),
+		Distance:  NewDistance(str),
 	}
-}
-
-func (le *LogEvents) ProcessFile(path string) {
-	file := OpenFile(path)
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		if ThereIsLightning(scanner.Text()) {
-			le.records = append(le.records, NewLogEventsRow(scanner.Text()))
-		}
-	}
-}
-
-func (le *LogEvents) GetRecords() []interface{} {
-	return le.records
 }

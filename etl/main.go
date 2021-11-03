@@ -4,9 +4,9 @@ import "log"
 
 var (
 	filesType = map[string]FilesTypes{
-		"log": NewLogEvents(),
-		"efm": NewElectricFields(),
-		"wc":  NewWeatherCloud(),
+		"log": NewLogEventsRecords(),
+		"efm": NewElectricFieldRecords(),
+		"wc":  NewWeathercloudRecords(),
 	}
 )
 

@@ -1,40 +1,19 @@
 package etl
 
-import (
-	"bufio"
-	"strings"
-)
+import "time"
 
 type ElectricField struct {
-	rocords []interface{}
+	DateTime      time.Time
+	ElectricField float64
+	RotorStatus   bool
+	PlaceID       int
 }
 
-func NewElectricFields() *ElectricField {
+func NewElectricField(path string, time string, electricFields []string, rotorStatus string) *ElectricField {
 	return &ElectricField{
-		rocords: make([]interface{}, 0),
+		PlaceID:       NewPlace(path),
+		DateTime:      NewDateTime("efm", path+" "+time),
+		ElectricField: ElectricFieldAvg(electricFields),
+		RotorStatus:   NewRotorStatus(rotorStatus),
 	}
-}
-
-func (ef *ElectricField) ProcessFile(path string) {
-	file := OpenFile(path)
-	defer file.Close()
-	electricFields := make([]string, 0)
-	time := ""
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		fields := strings.Split(scanner.Text(), ",")
-		if time == "" || time == fields[0] {
-			electricFields = append(electricFields, fields[1])
-			time = fields[0]
-		} else {
-			ef.rocords = append(ef.rocords, NewElectricFieldRow(path, fields[0], electricFields, fields[2]))
-			electricFields = make([]string, 0)
-			electricFields = append(electricFields, fields[1])
-			time = fields[0]
-		}
-	}
-}
-
-func (ef *ElectricField) GetRecords() []interface{} {
-	return ef.rocords
 }

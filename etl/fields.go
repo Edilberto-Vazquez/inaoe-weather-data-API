@@ -1,12 +1,15 @@
 package etl
 
 import (
+	"bytes"
+	"encoding/binary"
 	"log"
 	"math"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf16"
 )
 
 // -----open a file-----
@@ -28,7 +31,7 @@ func ThereIsLightning(str string) bool {
 }
 
 // -----date-----
-func newDateTime(rowType string, str string) (dateTime time.Time) {
+func NewDateTime(rowType string, str string) (dateTime time.Time) {
 	var date string
 	var duration string
 	var split []string
@@ -55,7 +58,7 @@ func newDateTime(rowType string, str string) (dateTime time.Time) {
 }
 
 // -----place-----
-func newPlace(str string) int {
+func NewPlace(str string) int {
 	re := regexList["place"]
 	return places[re.FindString(str)]
 }
@@ -65,7 +68,7 @@ func newLightning() bool {
 }
 
 // -----distance-----
-func newDistance(str string) (distance int64) {
+func NewDistance(str string) (distance int64) {
 	re := regexList["distance"]
 	match := re.FindString(str)
 	split := strings.Split(match, " ")
@@ -74,7 +77,7 @@ func newDistance(str string) (distance int64) {
 }
 
 // calc the average of the electric field
-func electricFieldAvg(electricFields []string) float64 {
+func ElectricFieldAvg(electricFields []string) float64 {
 	sum := 0.0
 	divisor := float64(len(electricFields))
 	for _, value := range electricFields {
@@ -87,20 +90,29 @@ func electricFieldAvg(electricFields []string) float64 {
 }
 
 // electric field
-func newRotorStatus(rotorStatus string) bool {
+func NewRotorStatus(rotorStatus string) bool {
 	return rotorStatus != "0"
 }
 
 // weather cloud
-func splitString(record string) []string {
+func SplitString(record string) []string {
 	return strings.Split(record, ";")
 }
 
 // change comma to point
-func commaToPoint(str string) float64 {
+func CommaToPoint(str string) float64 {
 	if str == "" {
 		return 0
 	}
 	float, _ := strconv.ParseFloat(strings.Replace(str, ",", ".", 1), 32)
 	return float
+}
+
+// -----Convert from UTF-16 to UTF-8
+func DecodeUtf16(b []byte, order binary.ByteOrder) (string, error) {
+	ints := make([]uint16, len(b)/2)
+	if err := binary.Read(bytes.NewReader(b), order, &ints); err != nil {
+		return "", err
+	}
+	return string(utf16.Decode(ints)), nil
 }
