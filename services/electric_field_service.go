@@ -29,12 +29,7 @@ func (ElectricFieldService) processFile(path string) (records []models.ElectricF
 			time = fields[0]
 			rotorStatus = fields[2]
 		} else {
-			records = append(records, models.ElectricField{
-				DateTime:      etl.NewDateTime("efm", path+" "+time),
-				ElectricField: etl.ElectricFieldAvg(electricFields),
-				RotorStatus:   etl.NewRotorStatus(rotorStatus),
-				PlaceID:       etl.NewPlace(path),
-			})
+			records = append(records, models.NewElectricField(path+" "+time, electricFields, rotorStatus, path))
 			electricFields = make([]string, 0)
 			electricFields = append(electricFields, fields[1])
 			time = fields[0]

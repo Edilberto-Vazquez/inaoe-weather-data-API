@@ -11,11 +11,11 @@ import (
 var (
 	DBCon *gorm.DB
 	sqlDB *sql.DB
+	err   error
 )
 
 func InitCon() {
-	var err error
-	dsn := "host=localhost user=edi password=1234 dbname=my_store port=5432 sslmode=disable"
+	dsn := "host=localhost user=admin password=1234 dbname=inaoe port=5432 sslmode=disable"
 	DBCon, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Println(err)
@@ -23,9 +23,9 @@ func InitCon() {
 }
 
 func CloseCon() {
-	sqlDB, err := DBCon.DB()
-	defer sqlDB.Close()
+	sqlDB, err = DBCon.DB()
 	if err != nil {
 		log.Println(err)
 	}
+	defer sqlDB.Close()
 }
