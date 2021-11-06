@@ -1,6 +1,8 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 var (
 	router = gin.Default()
@@ -8,7 +10,7 @@ var (
 
 func getRoutes() {
 	v1 := router.Group("/api/v1")
-	WeatherRouter(v1)
+	ElectricFieldRouter(v1)
 }
 
 func Run() {
