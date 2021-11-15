@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/routes"
-)
-
 func main() {
 	// libs.InitCon()
 	// defer libs.CloseCon()
@@ -14,5 +10,7 @@ func main() {
 	// efs.CreateMultipleRecords("/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-01102019.efm")
 	// log := services.NewLogService()
 	// log.CreateMultipleRecords("/mnt/f/DataSets/Conjuntos-originales/medidor-campo-electrico/EFMEvents.log")
-	routes.Run()
+	// efwcs := services.NewElectricFieldWeatherCloudService()
+	// efwcs.ProcessNewFiles("/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/EFMEvents.log", "/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-03032019.efm", "/mnt/d/DataSets/Conjuntos-originales/estacion-meteorologica/Weathercloud Pque Tecnolgico INAOE 2019-03.csv")
+	// routes.Run()
 }
