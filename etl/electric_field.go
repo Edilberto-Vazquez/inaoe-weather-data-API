@@ -12,7 +12,7 @@ type ElectricField struct {
 func NewElectricField(path string, time string, electricFields []string, rotorStatus string) *ElectricField {
 	return &ElectricField{
 		PlaceID:       NewPlace(path),
-		DateTime:      NewDateTime("efm", path+" "+time),
+		DateTime:      NewTimeStamp("efm", path+" "+time),
 		ElectricField: ElectricFieldAvg(electricFields),
 		RotorStatus:   NewRotorStatus(rotorStatus),
 	}

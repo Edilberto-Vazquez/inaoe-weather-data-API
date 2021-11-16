@@ -3,7 +3,9 @@ package services
 import (
 	"bufio"
 	"encoding/binary"
+	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/db/models"
@@ -12,24 +14,59 @@ import (
 )
 
 type ElectricFieldWeatherCloudService struct {
-	recordTable map[time.Time]*models.ElectricFieldWeatherCloud
+	RecordHashTable      map[time.Time]*utils.Singlylinkedlist
+	LogRecords           map[time.Time]*models.Log
+	ElectricFieldRecords map[time.Time]models.ElectricField
+	WeatherCloudRecords  map[time.Time]*models.Weathercloud
+	Mux                  sync.RWMutex
 }
 
 func NewElectricFieldWeatherCloudService() *ElectricFieldWeatherCloudService {
 	return &ElectricFieldWeatherCloudService{
-		recordTable: make(map[time.Time]*models.ElectricFieldWeatherCloud),
+		RecordHashTable:      make(map[time.Time]*utils.Singlylinkedlist),
+		LogRecords:           make(map[time.Time]*models.Log),
+		ElectricFieldRecords: make(map[time.Time]models.ElectricField),
+		WeatherCloudRecords:  make(map[time.Time]*models.Weathercloud),
 	}
 }
 
-func processLogFile(path string) (records map[time.Time]*models.Log) {
-	records = make(map[time.Time]*models.Log, 0)
-	file := etl.OpenFile(path)
+func ReadLines(path string) (records map[time.Time]models.ElectricField) {
+	file, _ := os.Open(path)
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
+	records = make(map[time.Time]models.ElectricField, 0)
+	electricFields := make([]string, 0)
+	var time string
+	var rotorStatus string
+	for scanner.Scan() {
+		fields := strings.Split(scanner.Text(), ",")
+		if time == "" || time == fields[0] {
+			electricFields = append(electricFields, fields[1]) // pasar a ReadLines
+			time = fields[0]
+			rotorStatus = fields[2]
+		} else {
+			record := models.ElectricField{
+				TimeStamp:     etl.NewTimeStamp("efm", path+" "+time),
+				ElectricField: etl.ElectricFieldAvg(electricFields),
+				RotorStatus:   etl.NewRotorStatus(rotorStatus),
+			}
+			records[record.TimeStamp] = record
+			electricFields = make([]string, 0)
+			electricFields = append(electricFields, fields[1])
+			time = fields[0]
+		}
+	}
+	return
+}
+
+func ProcessLogFile(path string) (records map[time.Time]*models.Log) {
+	records = make(map[time.Time]*models.Log, 0)
+	file, scanner := etl.OpenFile(path)
+	defer file.Close()
 	for scanner.Scan() {
 		if etl.ThereIsLightning(scanner.Text()) {
 			record := models.Log{
-				TimeStamp: etl.NewDateTime("log", scanner.Text()),
+				TimeStamp: etl.NewTimeStamp("log", scanner.Text()),
 				Lightning: etl.NewLightning(),
 				Distance:  etl.NewDistance(scanner.Text()),
 			}
@@ -39,40 +76,18 @@ func processLogFile(path string) (records map[time.Time]*models.Log) {
 	return
 }
 
-func processElectricFieldFile(path string) (records map[time.Time]*models.ElectricField) {
-	records = make(map[time.Time]*models.ElectricField, 0)
-	file := etl.OpenFile(path)
-	defer file.Close()
-	electricFields := make([]string, 0)
-	var time string
-	var rotorStatus string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		fields := strings.Split(scanner.Text(), ",")
-		if time == "" || time == fields[0] {
-			electricFields = append(electricFields, fields[1])
-			time = fields[0]
-			rotorStatus = fields[2]
-		} else {
-			record := models.ElectricField{
-				TimeStamp:     etl.NewDateTime("efm", path+" "+time),
-				ElectricField: etl.ElectricFieldAvg(electricFields),
-				RotorStatus:   etl.NewRotorStatus(rotorStatus),
-			}
-			records[record.TimeStamp] = &record
-			electricFields = make([]string, 0)
-			electricFields = append(electricFields, fields[1])
-			time = fields[0]
-		}
+func (s *ElectricFieldWeatherCloudService) ProcessElectricFieldFile(path string) {
+	for _, line := range ReadLines(path) {
+		s.Mux.Lock()
+		s.ElectricFieldRecords[line.TimeStamp] = line
+		s.Mux.Unlock()
 	}
-	return
 }
 
-func processWeatherCloudFile(path string) (records map[time.Time]*models.Weathercloud) {
+func ProcessWeatherCloudFile(path string) (records map[time.Time]*models.Weathercloud) {
 	records = make(map[time.Time]*models.Weathercloud, 0)
-	file := etl.OpenFile(path)
+	file, scanner := etl.OpenFile(path)
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
 	i := 0
 	for scanner.Scan() {
 		utf16, _ := etl.DecodeUtf16(scanner.Bytes(), binary.BigEndian)
@@ -85,7 +100,7 @@ func processWeatherCloudFile(path string) (records map[time.Time]*models.Weather
 			continue
 		}
 		record := models.Weathercloud{
-			TimeStamp: etl.NewDateTime("wc", fields[0]),
+			TimeStamp: etl.NewTimeStamp("wc", fields[0]),
 			TempIn:    etl.CommaToPoint(fields[1]),
 			Temp:      etl.CommaToPoint(fields[2]),
 			Chill:     etl.CommaToPoint(fields[3]),
@@ -108,15 +123,11 @@ func processWeatherCloudFile(path string) (records map[time.Time]*models.Weather
 }
 
 func (s *ElectricFieldWeatherCloudService) ProcessNewFiles(logPath string, efPath string, wcPath string) {
-	recordHashTable := make(map[time.Time]*utils.Singlylinkedlist, 0)
-	logRecords := processLogFile(logPath)
-	efRecords := processElectricFieldFile(efPath)
-	wcRecords := processWeatherCloudFile(wcPath)
-	for wcTimeStamp, wcRecord := range wcRecords {
-		if recordHashTable[wcTimeStamp] == nil {
-			recordHashTable[wcTimeStamp] = &utils.Singlylinkedlist{}
+	for wcTimeStamp, wcRecord := range s.WeatherCloudRecords {
+		if s.RecordHashTable[wcTimeStamp] == nil {
+			s.RecordHashTable[wcTimeStamp] = &utils.Singlylinkedlist{}
 		}
-		recordHashTable[wcTimeStamp].Append(models.ElectricFieldWeatherCloud{
+		s.RecordHashTable[wcTimeStamp].Append(models.ElectricFieldWeatherCloud{
 			TimeStamp: wcTimeStamp,
 			TempIn:    wcRecord.TempIn,
 			Temp:      wcRecord.Temp,
@@ -135,10 +146,10 @@ func (s *ElectricFieldWeatherCloudService) ProcessNewFiles(logPath string, efPat
 			RainRate:  wcRecord.RainRate,
 		})
 	}
-	for logTimeStamp, logRecord := range logRecords {
+	for logTimeStamp, logRecord := range s.LogRecords {
 		roundDate := logTimeStamp.Round(10 * time.Minute)
-		efRecord, efok := efRecords[logTimeStamp]
-		htRecord, htok := recordHashTable[roundDate]
+		efRecord, efok := s.ElectricFieldRecords[logTimeStamp]
+		htRecord, htok := s.RecordHashTable[roundDate]
 		if efok && htok {
 			if !htRecord.Head.Value.Lightning {
 				htRecord.Head.Value.Lightning = logRecord.Lightning

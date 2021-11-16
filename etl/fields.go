@@ -1,6 +1,7 @@
 package etl
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/binary"
 	"log"
@@ -13,12 +14,13 @@ import (
 )
 
 // -----open a file-----
-func OpenFile(path string) *os.File {
+func OpenFile(path string) (*os.File, *bufio.Scanner) {
 	file, err := os.Open(path)
+	scanner := bufio.NewScanner(file)
 	if err != nil {
 		log.Println(err)
 	}
-	return file
+	return file, scanner
 }
 
 // -----chech if the log contains a lightning
@@ -31,7 +33,7 @@ func ThereIsLightning(str string) bool {
 }
 
 // -----date-----
-func NewDateTime(rowType string, str string) (dateTime time.Time) {
+func NewTimeStamp(rowType string, str string) (timeStamp time.Time) {
 	var date string
 	var duration string
 	var split []string
@@ -40,18 +42,18 @@ func NewDateTime(rowType string, str string) (dateTime time.Time) {
 		date = regexList["date"].FindString(str)
 		duration = regexList["duration"].FindString(str)
 		split = strings.Split(date, "/")
-		dateTime, _ = time.Parse(time.RFC3339, split[2]+"-"+split[0]+"-"+split[1]+"T"+duration+"Z")
+		timeStamp, _ = time.Parse(time.RFC3339, split[2]+"-"+split[0]+"-"+split[1]+"T"+duration+"Z")
 		return
 	case "efm":
 		split = strings.Split(str, "/")
 		split = strings.Split(split[len(split)-1], "-")
 		date = split[1]
 		duration = regexList["duration"].FindString(str)
-		dateTime, _ = time.Parse(time.RFC3339, date[4:8]+"-"+date[0:2]+"-"+date[2:4]+"T"+duration+"Z")
+		timeStamp, _ = time.Parse(time.RFC3339, date[4:8]+"-"+date[0:2]+"-"+date[2:4]+"T"+duration+"Z")
 		return
 	case "wc":
 		split = strings.Split(str, " ")
-		dateTime, _ = time.Parse(time.RFC3339, split[0]+"T"+split[1]+"Z")
+		timeStamp, _ = time.Parse(time.RFC3339, split[0]+"T"+split[1]+"Z")
 		return
 	}
 	return

@@ -1,9 +1,5 @@
 package etl
 
-import (
-	"bufio"
-)
-
 type LogEventsRecords struct {
 	records []interface{}
 }
@@ -15,9 +11,8 @@ func NewLogEventsRecords() *LogEventsRecords {
 }
 
 func (le *LogEventsRecords) ProcessFile(path string) {
-	file := OpenFile(path)
+	file, scanner := OpenFile(path)
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if ThereIsLightning(scanner.Text()) {
 			le.records = append(le.records, NewLogEvents(scanner.Text()))

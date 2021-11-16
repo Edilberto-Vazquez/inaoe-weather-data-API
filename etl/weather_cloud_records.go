@@ -1,9 +1,5 @@
 package etl
 
-import (
-	"bufio"
-)
-
 type WeathercloudRows struct {
 	records []interface{}
 }
@@ -15,9 +11,9 @@ func NewWeathercloudRecords() *WeathercloudRows {
 }
 
 func (wc *WeathercloudRows) ProcessFile(path string) {
-	file := OpenFile(path)
+	file, scanner := OpenFile(path)
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
+
 	i := 0
 	for scanner.Scan() {
 		if len(scanner.Text()) == 1 {

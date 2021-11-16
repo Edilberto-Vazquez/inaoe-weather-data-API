@@ -29,7 +29,7 @@ func NewWeathercloud(path string, record []byte) *Weathercloud {
 	utf16, _ := DecodeUtf16(record, binary.BigEndian)
 	fields := SplitString(utf16)
 	return &Weathercloud{
-		DateTime: NewDateTime("wc", fields[0]),
+		DateTime: NewTimeStamp("wc", fields[0]),
 		TempIn:   CommaToPoint(fields[1]),
 		Temp:     CommaToPoint(fields[2]),
 		Chill:    CommaToPoint(fields[3]),

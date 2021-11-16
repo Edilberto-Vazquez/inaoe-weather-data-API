@@ -11,7 +11,7 @@ type LogEvents struct {
 
 func NewLogEvents(str string) *LogEvents {
 	return &LogEvents{
-		DateTime:  NewDateTime("log", str),
+		DateTime:  NewTimeStamp("log", str),
 		PlaceID:   NewPlace(str),
 		Lightning: NewLightning(),
 		Distance:  NewDistance(str),

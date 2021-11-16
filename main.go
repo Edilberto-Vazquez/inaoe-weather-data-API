@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"time"
+
+	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/etl"
+)
+
 func main() {
 	// libs.InitCon()
 	// defer libs.CloseCon()
@@ -13,4 +20,15 @@ func main() {
 	// efwcs := services.NewElectricFieldWeatherCloudService()
 	// efwcs.ProcessNewFiles("/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/EFMEvents.log", "/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/INAOE parque-03032019.efm", "/mnt/d/DataSets/Conjuntos-originales/estacion-meteorologica/Weathercloud Pque Tecnolgico INAOE 2019-03.csv")
 	// routes.Run()
+	start := time.Now()
+	logRoot := "/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/"
+	efmRoot := "/mnt/d/DataSets/Conjuntos-originales/medidor-campo-electrico/"
+	wcRoot := "/mnt/d/DataSets/Conjuntos-originales/estacion-meteorologica/"
+	etl.ProcessFiles(logRoot, efmRoot, wcRoot)
+	fmt.Println(len(etl.LogRecords))
+	fmt.Println(len(etl.ElectricFieldRecords))
+	fmt.Println(len(etl.WeatherCloudRecords))
+	fmt.Println(len(etl.RecordHashTable))
+	duration := time.Since(start)
+	fmt.Println(duration)
 }
