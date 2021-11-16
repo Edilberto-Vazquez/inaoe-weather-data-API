@@ -10,13 +10,13 @@ import (
 var (
 	LogRecords           = make(map[time.Time]models.Log)
 	ElectricFieldRecords = make(map[time.Time]models.ElectricField)
-	WeatherCloudRecords  = make(map[time.Time]models.Weathercloud)
+	WeathercloudRecords  = make(map[time.Time]models.Weathercloud)
 	RecordHashTable      = make(map[time.Time]*utils.Singlylinkedlist)
 	RecordSliceTable     = make([]*models.ElectricFieldWeatherCloud, 0)
 )
 
 func CreateRecordHashTable() {
-	for wcTimeStamp, wcRecord := range WeatherCloudRecords {
+	for wcTimeStamp, wcRecord := range WeathercloudRecords {
 		if RecordHashTable[wcTimeStamp] == nil {
 			RecordHashTable[wcTimeStamp] = &utils.Singlylinkedlist{}
 		}
@@ -77,7 +77,7 @@ func CreateRecordHashTable() {
 	}
 	LogRecords = make(map[time.Time]models.Log, 0)
 	ElectricFieldRecords = make(map[time.Time]models.ElectricField, 0)
-	WeatherCloudRecords = make(map[time.Time]models.Weathercloud, 0)
+	WeathercloudRecords = make(map[time.Time]models.Weathercloud, 0)
 }
 
 func CreateRecordSliceTable() {
@@ -126,13 +126,13 @@ func ProcessFiles(logRooot, efmRoot string, wcRoot string) {
 	cwc := make(chan map[time.Time]models.Weathercloud, len(wcFiles))
 	for _, wcFile := range wcFiles {
 		go func(path string, c chan<- map[time.Time]models.Weathercloud) {
-			record := ProcessWeatherCloudFile(path)
+			record := ProcessWeathercloudFile(path)
 			c <- record
 		}(wcFile, cwc)
 	}
 	for i := 0; i < len(wcFiles); i++ {
 		for _, v := range <-cwc {
-			WeatherCloudRecords[v.TimeStamp] = v
+			WeathercloudRecords[v.TimeStamp] = v
 		}
 	}
 	close(cwc)

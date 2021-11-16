@@ -2,30 +2,27 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type ElectricFieldWeatherCloud struct {
-	gorm.Model
-	TimeStamp     time.Time `gorm:"<-:create;not null"`
-	Lightning     bool      `gorm:"<-:create;not null"`
-	Distance      int64     `gorm:"<-:create;not null"`
-	ElectricField float64   `gorm:"<-:create;not null"`
-	RotorStatus   bool      `gorm:"<-:create;not null"`
-	TempIn        float64   `gorm:"<-:create"`
-	Temp          float64   `gorm:"<-:create"`
-	Chill         float64   `gorm:"<-:create"`
-	DewIn         float64   `gorm:"<-:create"`
-	Dew           float64   `gorm:"<-:create"`
-	HeatIn        float64   `gorm:"<-:create"`
-	Heat          float64   `gorm:"<-:create"`
-	Humin         float64   `gorm:"<-:create"`
-	Hum           float64   `gorm:"<-:create"`
-	Wspdhi        float64   `gorm:"<-:create"`
-	Wspdavg       float64   `gorm:"<-:create"`
-	Wdiravg       float64   `gorm:"<-:create"`
-	Bar           float64   `gorm:"<-:create"`
-	Rain          float64   `gorm:"<-:create"`
-	RainRate      float64   `gorm:"<-:create"`
+	TimeStamp     time.Time
+	Lightning     bool
+	Distance      int64
+	ElectricField float64
+	RotorStatus   bool
+	TempIn        float64
+	Temp          float64
+	Chill         float64
+	DewIn         float64
+	Dew           float64
+	HeatIn        float64
+	Heat          float64
+	Humin         float64
+	Hum           float64
+	Wspdhi        float64
+	Wspdavg       float64
+	Wdiravg       float64
+	Bar           float64
+	Rain          float64
+	RainRate      float64
 }

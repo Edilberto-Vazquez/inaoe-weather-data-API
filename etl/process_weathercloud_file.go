@@ -8,7 +8,7 @@ import (
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/db/models"
 )
 
-func ProcessWeatherCloudFile(path string) (records map[time.Time]models.Weathercloud) {
+func ProcessWeathercloudFile(path string) (records map[time.Time]models.Weathercloud) {
 	records = make(map[time.Time]models.Weathercloud, 0)
 	file, scanner := OpenFile(path)
 	defer file.Close()

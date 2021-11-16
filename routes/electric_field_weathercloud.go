@@ -5,17 +5,20 @@ import (
 
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/middleware"
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/schemas"
+	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/services"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
 
-func ElectricFieldRouter(rg *gin.RouterGroup) {
+func ElectricFieldWeathercloudRouter(rg *gin.RouterGroup) {
 	efr := rg.Group("/electric-field")
 	var efs schemas.ElectricFieldSchema
+	var service services.ElectricFieldWeatherCloudService
 	efr.GET("/date-range", middleware.ValidatorHandler(&efs, binding.Query), func(c *gin.Context) {
+		records, rows, _ := service.Find(c.Query("firstdate"), c.Query("lastdate"), c.QueryArray("fields"))
 		c.JSON(http.StatusOK, gin.H{
-			"initialdate": c.Query("initialdate"),
-			"finaldate":   c.Query("finaldate"),
+			"rows":    rows,
+			"records": records,
 			// todo try QueryArray for multiple fields
 		})
 	})
