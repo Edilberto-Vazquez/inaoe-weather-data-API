@@ -12,6 +12,7 @@ var (
 	ElectricFieldRecords = make(map[time.Time]models.ElectricField)
 	WeatherCloudRecords  = make(map[time.Time]models.Weathercloud)
 	RecordHashTable      = make(map[time.Time]*utils.Singlylinkedlist)
+	RecordSliceTable     = make([]*models.ElectricFieldWeatherCloud, 0)
 )
 
 func CreateRecordHashTable() {
@@ -74,6 +75,20 @@ func CreateRecordHashTable() {
 			}
 		}
 	}
+	LogRecords = make(map[time.Time]models.Log, 0)
+	ElectricFieldRecords = make(map[time.Time]models.ElectricField, 0)
+	WeatherCloudRecords = make(map[time.Time]models.Weathercloud, 0)
+}
+
+func CreateRecordSliceTable() {
+	for _, key := range RecordHashTable {
+		currentNode := key.Head
+		for i := 0; i < key.Length(); i++ {
+			RecordSliceTable = append(RecordSliceTable, &currentNode.Value)
+			currentNode = currentNode.Next
+		}
+	}
+	RecordHashTable = make(map[time.Time]*utils.Singlylinkedlist, 0)
 }
 
 func ProcessFiles(logRooot, efmRoot string, wcRoot string) {
@@ -125,5 +140,5 @@ func ProcessFiles(logRooot, efmRoot string, wcRoot string) {
 	CreateRecordHashTable()
 
 	// create slice table
-	//CreateRecordSliceTable()
+	CreateRecordSliceTable()
 }

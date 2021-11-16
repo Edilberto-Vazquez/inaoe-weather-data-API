@@ -55,31 +55,40 @@ type Weathercloud struct {
 	Place    Place `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+type ElectricFieldWeatherCloud struct {
+	gorm.Model
+	TimeStamp     time.Time `gorm:"<-:create;not null"`
+	Lightning     bool      `gorm:"<-:create;not null"`
+	Distance      int64     `gorm:"<-:create;not null"`
+	ElectricField float64   `gorm:"<-:create;not null"`
+	RotorStatus   bool      `gorm:"<-:create;not null"`
+	TempIn        float64   `gorm:"<-:create"`
+	Temp          float64   `gorm:"<-:create"`
+	Chill         float64   `gorm:"<-:create"`
+	DewIn         float64   `gorm:"<-:create"`
+	Dew           float64   `gorm:"<-:create"`
+	HeatIn        float64   `gorm:"<-:create"`
+	Heat          float64   `gorm:"<-:create"`
+	Humin         float64   `gorm:"<-:create"`
+	Hum           float64   `gorm:"<-:create"`
+	Wspdhi        float64   `gorm:"<-:create"`
+	Wspdavg       float64   `gorm:"<-:create"`
+	Wdiravg       float64   `gorm:"<-:create"`
+	Bar           float64   `gorm:"<-:create"`
+	Rain          float64   `gorm:"<-:create"`
+	RainRate      float64   `gorm:"<-:create"`
+}
+
 func Migrate() {
 	m := gormigrate.New(libs.DBCon, gormigrate.DefaultOptions, []*gormigrate.Migration{})
 	m.InitSchema(func(tx *gorm.DB) error {
 		err := tx.AutoMigrate(
-			&Place{},
-			&Log{},
-			&ElectricField{},
-			&Weathercloud{},
+			&ElectricFieldWeatherCloud{},
 		)
 		if err != nil {
 			fmt.Println(err)
 			return err
 		}
-		// if err := tx.Exec("ALTER TABLE logs ADD CONSTRAINT fk_logs_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-		// 	fmt.Println(err)
-		// 	return err
-		// }
-		// if err := tx.Exec("ALTER TABLE electric_fields ADD CONSTRAINT fk_electric_fields_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-		// 	fmt.Println(err)
-		// 	return err
-		// }
-		// if err := tx.Exec("ALTER TABLE weatherclouds ADD CONSTRAINT fk_weatherclouds_place FOREIGN KEY (place_id) REFERENCES places (id)").Error; err != nil {
-		// 	fmt.Println(err)
-		// 	return err
-		// }
 		return nil
 	})
 
