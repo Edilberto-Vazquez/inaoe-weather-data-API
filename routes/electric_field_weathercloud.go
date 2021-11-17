@@ -11,15 +11,14 @@ import (
 )
 
 func ElectricFieldWeathercloudRouter(rg *gin.RouterGroup) {
-	efr := rg.Group("/electric-field")
+	efr := rg.Group("/electric-field-and-weathercloud")
 	var efs schemas.ElectricFieldSchema
 	var service services.ElectricFieldWeatherCloudService
-	efr.GET("/date-range", middleware.ValidatorHandler(&efs, binding.Query), func(c *gin.Context) {
+	efr.GET("/", middleware.ValidatorHandler(&efs, binding.Query), func(c *gin.Context) {
 		records, rows, _ := service.Find(c.Query("firstdate"), c.Query("lastdate"), c.QueryArray("fields"))
 		c.JSON(http.StatusOK, gin.H{
 			"rows":    rows,
 			"records": records,
-			// todo try QueryArray for multiple fields
 		})
 	})
 }
