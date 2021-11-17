@@ -10,15 +10,21 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-func ElectricFieldWeathercloudRouter(rg *gin.RouterGroup) {
-	efr := rg.Group("/electric-field-and-weathercloud")
+func ElectricFieldWeatherCloudRouter(rg *gin.RouterGroup) {
+	efr := rg.Group("/electric-field-and-weather-cloud")
 	var efs schemas.ElectricFieldSchema
 	var service services.ElectricFieldWeatherCloudService
 	efr.GET("/", middleware.ValidatorHandler(&efs, binding.Query), func(c *gin.Context) {
-		records, rows, _ := service.Find(c.Query("firstdate"), c.Query("lastdate"), c.QueryArray("fields"))
-		c.JSON(http.StatusOK, gin.H{
-			"rows":    rows,
-			"records": records,
-		})
+		records, rows, err := service.Find(c.Query("firstdate"), c.Query("lastdate"), c.QueryArray("fields"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err,
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"rows":    rows,
+				"records": records,
+			})
+		}
 	})
 }

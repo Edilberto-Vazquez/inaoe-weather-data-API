@@ -10,7 +10,7 @@ var (
 
 func getRoutes() {
 	v1 := router.Group("/api/v1")
-	ElectricFieldWeathercloudRouter(v1)
+	ElectricFieldWeatherCloudRouter(v1)
 }
 
 func Run() {

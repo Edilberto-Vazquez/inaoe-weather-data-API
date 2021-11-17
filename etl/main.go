@@ -126,7 +126,7 @@ func ProcessFiles(logRooot, efmRoot string, wcRoot string) {
 	cwc := make(chan map[time.Time]models.Weathercloud, len(wcFiles))
 	for _, wcFile := range wcFiles {
 		go func(path string, c chan<- map[time.Time]models.Weathercloud) {
-			record := ProcessWeathercloudFile(path)
+			record := ProcessWeatherCloudFile(path)
 			c <- record
 		}(wcFile, cwc)
 	}
