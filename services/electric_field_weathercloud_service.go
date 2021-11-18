@@ -1,8 +1,6 @@
 package services
 
 import (
-	"log"
-
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/db/models"
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/libs"
 )
@@ -19,7 +17,6 @@ func (ElectricFieldWeatherCloudService) CreateRecords(records []*models.Electric
 }
 
 func (ElectricFieldWeatherCloudService) Find(firstDate string, lastDate string, fields []string) ([]models.ElectricFieldWeatherCloud, int64, error) {
-	log.Println(fields)
 	var records []models.ElectricFieldWeatherCloud
 	result := libs.DBCon.Select(fields).Where("time_stamp BETWEEN ? AND ?", firstDate, lastDate).Find(&records)
 	return records, result.RowsAffected, result.Error
