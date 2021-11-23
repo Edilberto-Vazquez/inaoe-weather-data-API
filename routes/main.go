@@ -9,8 +9,8 @@ var (
 )
 
 func getRoutes() {
-	v1 := router.Group("/api/v1")
-	ElectricFieldRouter(v1)
+	v1 := router.Group("/inaoe/v1")
+	GroupByRouter(v1)
 }
 
 func Run() {
