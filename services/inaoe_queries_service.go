@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"reflect"
 	"time"
 
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/libs"
@@ -67,14 +66,6 @@ func NewINAOEQuerysService() *INAOEQuerysService {
 	return &INAOEQuerysService{}
 }
 
-func ConvertToSlice(slice interface{}) (sc []string) {
-	s := reflect.ValueOf(slice)
-	for i := 0; i < s.Len(); i++ {
-		sc = append(sc, s.Index(i).Interface().(string))
-	}
-	return
-}
-
 func Count(fields []string, table string) (count string) {
 	if fields != nil {
 		for _, field := range fields {
@@ -97,8 +88,8 @@ func (INAOEQuerysService) JoinTypeFind(queryOptions map[string]interface{}) ([]R
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
 	}
-	weatherCloud := ConvertToSlice(queryOptions["weatherclouds"])
-	electricField := ConvertToSlice(queryOptions["electricfields"])
+	weatherCloud := utils.ConvertToSlice(queryOptions["weatherclouds"])
+	electricField := utils.ConvertToSlice(queryOptions["electricfields"])
 	joinType := queryOptions["jointype"].(string)
 	count += Count(weatherCloud, "weather_clouds")
 	count += Count(electricField, "electric_fields")
@@ -126,8 +117,8 @@ func (INAOEQuerysService) Find(queryOptions map[string]interface{}) ([]Result, i
 	datePart := queryOptions["datepart"].(string)
 	fromdate, fromErr := utils.ParseTimeStamp(queryOptions["fromdate"].(string))
 	toDate, toErr := utils.ParseTimeStamp(queryOptions["todate"].(string))
-	weatherCloud := ConvertToSlice(queryOptions["weatherclouds"])
-	electricField := ConvertToSlice(queryOptions["electricfields"])
+	weatherCloud := utils.ConvertToSlice(queryOptions["weatherclouds"])
+	electricField := utils.ConvertToSlice(queryOptions["electricfields"])
 	var table string
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
