@@ -83,8 +83,8 @@ func Count(fields []string, table string) (count string) {
 func (INAOEQuerysService) JoinTypeFind(schema schemas.INAOEQuerySchema) ([]Result, int64, error) {
 	var results []Result
 	var count string
-	fromDate, fromErr := utils.ParseTimeStamp(schema.FromDate.String())
-	toDate, toErr := utils.ParseTimeStamp(schema.ToDate.String())
+	fromDate, fromErr := utils.FormatTimeStamp(schema.FromDate)
+	toDate, toErr := utils.FormatTimeStamp(schema.ToDate)
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
 	}
@@ -111,8 +111,8 @@ func (INAOEQuerysService) Find(schema schemas.INAOEQuerySchema) ([]Result, int64
 	var results []Result
 	var response *gorm.DB
 	var count string
-	fromdate, fromErr := utils.ParseTimeStamp(schema.FromDate.String())
-	toDate, toErr := utils.ParseTimeStamp(schema.ToDate.String())
+	fromdate, fromErr := utils.FormatTimeStamp(schema.FromDate)
+	toDate, toErr := utils.FormatTimeStamp(schema.ToDate)
 	var table string
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
