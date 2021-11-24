@@ -3,12 +3,16 @@ module github.com/Edilberto-Vazquez/inaoe-weather-data-API
 
 go 1.17
 
-require github.com/gin-gonic/gin v1.7.4
+require (
+	github.com/gin-gonic/gin v1.7.4
+	github.com/spf13/viper v1.9.0
+	gorm.io/driver/postgres v1.2.1
+	gorm.io/gorm v1.22.2
+)
 
 require (
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-gormigrate/gormigrate/v2 v2.0.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
@@ -36,7 +40,6 @@ require (
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.9.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
@@ -45,6 +48,4 @@ require (
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/driver/postgres v1.2.1 // indirect
-	gorm.io/gorm v1.22.2 // indirect
 )
