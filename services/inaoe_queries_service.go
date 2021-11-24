@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/libs"
+	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/schemas"
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/utils"
 	"gorm.io/gorm"
 )
@@ -79,24 +80,20 @@ func Count(fields []string, table string) (count string) {
 	return count
 }
 
-func (INAOEQuerysService) JoinTypeFind(queryOptions map[string]interface{}) ([]Result, int64, error) {
+func (INAOEQuerysService) JoinTypeFind(schema schemas.INAOEQuerySchema) ([]Result, int64, error) {
 	var results []Result
 	var count string
-	datePart := queryOptions["datepart"].(string)
-	fromDate, fromErr := utils.ParseTimeStamp(queryOptions["fromdate"].(string))
-	toDate, toErr := utils.ParseTimeStamp(queryOptions["todate"].(string))
+	fromDate, fromErr := utils.ParseTimeStamp(schema.FromDate.String())
+	toDate, toErr := utils.ParseTimeStamp(schema.ToDate.String())
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
 	}
-	weatherCloud := utils.ConvertToSlice(queryOptions["weatherclouds"])
-	electricField := utils.ConvertToSlice(queryOptions["electricfields"])
-	joinType := queryOptions["jointype"].(string)
-	count += Count(weatherCloud, "weather_clouds")
-	count += Count(electricField, "electric_fields")
+	count += Count(schema.WeatherClouds, "weather_clouds")
+	count += Count(schema.ElectricFields, "electric_fields")
 	count = count[0 : len(count)-1]
 	response := libs.DBCon.Table("weather_clouds").
-		Joins(joinType+" JOIN electric_fields ON weather_clouds.time_stamp = electric_fields.time_stamp_round").
-		Select("DATE_TRUNC('"+datePart+"', weather_clouds.time_stamp) date,"+count).
+		Joins(schema.JoinType+" JOIN electric_fields ON weather_clouds.time_stamp = electric_fields.time_stamp_round").
+		Select("DATE_TRUNC('"+schema.DatePart+"', weather_clouds.time_stamp) date,"+count).
 		Where("weather_clouds.time_stamp BETWEEN ? AND ?", fromDate, toDate).
 		Group("date").
 		Order("date").
@@ -110,30 +107,27 @@ func (INAOEQuerysService) JoinTypeFind(queryOptions map[string]interface{}) ([]R
 	return results, response.RowsAffected, response.Error
 }
 
-func (INAOEQuerysService) Find(queryOptions map[string]interface{}) ([]Result, int64, error) {
+func (INAOEQuerysService) Find(schema schemas.INAOEQuerySchema) ([]Result, int64, error) {
 	var results []Result
 	var response *gorm.DB
 	var count string
-	datePart := queryOptions["datepart"].(string)
-	fromdate, fromErr := utils.ParseTimeStamp(queryOptions["fromdate"].(string))
-	toDate, toErr := utils.ParseTimeStamp(queryOptions["todate"].(string))
-	weatherCloud := utils.ConvertToSlice(queryOptions["weatherclouds"])
-	electricField := utils.ConvertToSlice(queryOptions["electricfields"])
+	fromdate, fromErr := utils.ParseTimeStamp(schema.FromDate.String())
+	toDate, toErr := utils.ParseTimeStamp(schema.ToDate.String())
 	var table string
 	if fromErr != nil || toErr != nil {
 		return nil, 0, fmt.Errorf("cannot parse %v, %v", fromErr, toErr)
 	}
-	if weatherCloud != nil {
-		count = Count(weatherCloud, "weather_clouds")
+	if schema.WeatherClouds != nil {
+		count = Count(schema.WeatherClouds, "weather_clouds")
 		table = "weather_clouds"
 	}
-	if electricField != nil {
-		count = Count(electricField, "electric_fields")
+	if schema.ElectricFields != nil {
+		count = Count(schema.ElectricFields, "electric_fields")
 		table = "electric_fields"
 	}
 	count = count[0 : len(count)-1]
 	response = libs.DBCon.Table(table).
-		Select("DATE_TRUNC('"+datePart+"', time_stamp) date,"+count).
+		Select("DATE_TRUNC('"+schema.DatePart+"', time_stamp) date,"+count).
 		Where("time_stamp BETWEEN ? AND ?", fromdate, toDate).
 		Group("date").
 		Order("date").
