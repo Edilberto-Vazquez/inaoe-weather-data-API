@@ -1,5 +1,3 @@
-// +heroku goVersion go1.17
-
 package main
 
 import (
