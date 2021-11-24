@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/config"
+	"os"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +16,7 @@ func getRoutes() {
 }
 
 func Run() {
+	port := os.Getenv("PORT")
 	getRoutes()
-	router.Run(":" + config.API_PORT)
+	router.Run(":" + port)
 }
