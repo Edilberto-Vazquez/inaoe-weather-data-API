@@ -3,6 +3,7 @@ package routes
 import (
 	"os"
 
+	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,6 +18,7 @@ func getRoutes() {
 
 func Run() {
 	port := os.Getenv("PORT")
+	router.Use(middleware.Cors())
 	getRoutes()
 	router.Run(":" + port)
 }
