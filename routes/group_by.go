@@ -9,7 +9,7 @@ import (
 )
 
 func GroupByRouter(rg *gin.RouterGroup) {
-	efr := rg.Group("/group-by")
+	efr := rg.Group("/group-by-date")
 	efr.GET("/", func(c *gin.Context) {
 		var schema schemas.INAOEQuerySchema
 		var results []services.Result
