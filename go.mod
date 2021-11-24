@@ -1,3 +1,4 @@
+// +heroku goVersion go1.17
 module github.com/Edilberto-Vazquez/inaoe-weather-data-API
 
 go 1.17
