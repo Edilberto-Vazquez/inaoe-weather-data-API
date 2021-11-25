@@ -16,7 +16,7 @@ func GroupByRouter(rg *gin.RouterGroup) {
 		var rows int64
 		var err error
 		service := services.NewINAOEQuerysService()
-		if err = c.ShouldBindJSON(&schema); err != nil {
+		if err = c.ShouldBindQuery(&schema); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": err.Error(),
 			})
