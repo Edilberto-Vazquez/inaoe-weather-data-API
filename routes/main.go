@@ -12,7 +12,7 @@ var (
 )
 
 func getRoutes() {
-	v1 := router.Group("/inaoe/v1")
+	v1 := router.Group("/api/v1")
 	GroupByRouter(v1)
 }
 
