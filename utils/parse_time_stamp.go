@@ -2,12 +2,13 @@ package utils
 
 import (
 	"reflect"
-	"strings"
+	"regexp"
 	"time"
 )
 
 func FormatTimeStamp(timeStamp time.Time) (string, error) {
-	return strings.Replace(timeStamp.String(), " +0000 UTC", "", 1), nil
+	r := regexp.MustCompile(`\s(\+|\-)\d\d\d\d\s\w\w\w`)
+	return r.ReplaceAllString(timeStamp.String(), ""), nil
 }
 
 func ConvertToSlice(slice interface{}) (sc []string) {
