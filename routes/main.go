@@ -14,7 +14,7 @@ var (
 
 func getRoutes() {
 	v1 := router.Group("/api/v1")
-	GroupByRouter(v1)
+	SelectRecordsRouter(v1)
 }
 
 func Run() {

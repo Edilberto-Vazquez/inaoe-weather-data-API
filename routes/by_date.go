@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GroupByRouter(rg *gin.RouterGroup) {
+func SelectRecordsRouter(rg *gin.RouterGroup) {
 	efr := rg.Group("/select-records")
 	efr.GET("/by-date", func(c *gin.Context) {
 		var byDateSchema schemas.ByDateSchema
