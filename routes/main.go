@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/middleware"
+	"github.com/Edilberto-Vazquez/inaoe-weather-data-API/validators"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,7 @@ func getRoutes() {
 func Run() {
 	port := os.Getenv("PORT")
 	router.Use(middleware.Cors())
+	validators.RegisterValidations()
 	getRoutes()
 	router.Run(":" + port)
 }
