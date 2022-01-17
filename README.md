@@ -7,11 +7,13 @@ For more information about how to deploy to heroku please refer to the official 
 
 To put the necessary modules inside the main package, run `go mod vendor`
 
-####TO-DO
+TO-DO
+-------------
 
 + Change the DB from AWS
 
-####Libraries used
+Libraries used
+-------------
 
 + "gin"
 + "cors"
