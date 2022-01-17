@@ -1,4 +1,4 @@
-# inaoe-weather-data-API
+# INAOE-weather-data-API
 Weather data REST API for INAOE weather stations.
 This page was development with Golang 1.17, Gin Web Framework and Gorm as ORM.
 The deploy was made to heroku with a Database in AWS.
